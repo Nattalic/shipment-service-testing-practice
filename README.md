@@ -26,3 +26,8 @@ Las pruebas unitarias no requieren Docker ni PostgreSQL. La configuración de ba
 - `src/shipments/dto/create-shipment.dto.ts`
 
 El trabajo debe concentrarse en el archivo de pruebas.
+
+
+## Pruebas unitarias exitosas
+
+![Pruebas unitarias exitosas](./evidence/green_tests.png)
