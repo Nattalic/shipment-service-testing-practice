@@ -4,6 +4,7 @@ import { ShipmentEntity } from './entities/shipment.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ShipmentRulesService } from './shipment-rules.service';
 import { Test } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
 
 void describe('ShipmentsServiceTest', () => {
     let service: ShipmentsService
@@ -84,5 +85,13 @@ void describe('ShipmentsServiceTest', () => {
         });
   })
 
+  it('throws NotFoundException when the id does not exist', async () => {
+    repositoryMock.findOneBy.mockResolvedValue(null);
 
+    await expect(service.findOne(999)).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
+  })
+
+  
 })
