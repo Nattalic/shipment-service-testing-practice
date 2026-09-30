@@ -5,6 +5,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { ShipmentRulesService } from './shipment-rules.service';
 import { Test } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
+import { ShipmentStatus } from './shipment-status.enum';
 
 void describe('ShipmentsServiceTest', () => {
     let service: ShipmentsService
@@ -13,7 +14,7 @@ void describe('ShipmentsServiceTest', () => {
     find: jest.fn<() => Promise<ShipmentEntity[]>>(),
     findOneBy:  jest.fn<(options: any) => Promise<ShipmentEntity | null>>(),
     create: jest.fn(),
-    save: jest.fn()
+    save: jest.fn<(shipment: ShipmentEntity) => Promise<ShipmentEntity>>(),
   };
 
   const shipmentRulesServiceMock = {
@@ -92,6 +93,37 @@ void describe('ShipmentsServiceTest', () => {
       NotFoundException,
     );
   })
+
+  it('creates and saves a shipment', async () => {
+
+    const data = {
+        trackingCode: 'SHIP-100',
+        destination: 'Cali',
+    };
+
+    const createdShipment = {
+        ...data,
+        status: ShipmentStatus.CREATED,
+    } as ShipmentEntity;
+
+    const savedShipment = {
+        ...createdShipment,
+        id: 1,
+    } as ShipmentEntity;
+
+    repositoryMock.create.mockReturnValue(createdShipment);
+    repositoryMock.save.mockResolvedValue(savedShipment);
+
+    const result = await service.create(data);
+
+    expect(repositoryMock.create).toHaveBeenCalledWith({
+        ...data,
+        status: ShipmentStatus.CREATED,
+    });
+
+    expect(repositoryMock.save).toHaveBeenCalledWith(createdShipment);
+    expect(result).toEqual(savedShipment);
+});
 
   
 })
