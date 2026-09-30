@@ -10,7 +10,7 @@ void describe('ShipmentsServiceTest', () => {
     
     const repositoryMock = {
     find: jest.fn<() => Promise<ShipmentEntity[]>>(),
-    findOneBy: jest.fn(),
+    findOneBy:  jest.fn<(options: any) => Promise<ShipmentEntity | null>>(),
     create: jest.fn(),
     save: jest.fn()
   };
@@ -64,6 +64,25 @@ void describe('ShipmentsServiceTest', () => {
 
     expect(result).toEqual(shipmentsMock)
     expect(repositoryMock.find).toHaveBeenCalledTimes(1)
-
   })
+
+  it('returns a shipment when the id exists', async () => {
+    
+    const shipmentMock = {
+            id: 1,
+            trackingCode: 'SHIP-001',
+            destination: 'Cali',
+        } as ShipmentEntity
+
+        repositoryMock.findOneBy.mockResolvedValue(shipmentMock)
+
+        const result = await service.findOne(1)
+
+        expect(result).toEqual(shipmentMock)
+        expect(repositoryMock.findOneBy).toHaveBeenCalledWith({
+            id: 1,
+        });
+  })
+
+
 })
