@@ -11,7 +11,8 @@ void describe('ShipmentsServiceTest', () => {
     let service: ShipmentsService
     
     const repositoryMock = {
-    find: jest.fn<() => Promise<ShipmentEntity[]>>(),
+        //sale del service 
+    find: jest.fn<(options: any) => Promise<ShipmentEntity[]>>(),
     findOneBy:  jest.fn<(options: any) => Promise<ShipmentEntity | null>>(),
     create: jest.fn(),
     save: jest.fn<(shipment: ShipmentEntity) => Promise<ShipmentEntity>>(),
@@ -21,6 +22,8 @@ void describe('ShipmentsServiceTest', () => {
         ensureCanBeDispatched: jest.fn(),
     }
 
+    //el before each es un tipo antes de correr los test hay que poner esta config
+    //
     beforeEach(async () => {
         jest.clearAllMocks()
 
@@ -96,18 +99,24 @@ void describe('ShipmentsServiceTest', () => {
 
     it('creates and saves a shipment', async () => {
 
+        //se mandan dos datos, como postman
+        //mock data del envio, datos de envio
         const data = {
             trackingCode: 'SHIP-100',
             destination: 'Cali',
         };
 
+        //mock data para el envio que fue creado osea lo que me responde postamn
         const createdShipment = {
             ...data,
             status: ShipmentStatus.CREATED,
         } as ShipmentEntity;
 
+        //lo que se guarda 
+        //mock data del save
+        //lo que se guarda en la base de datos
         const savedShipment = {
-            ...createdShipment,
+           ...createdShipment,
             id: 1,
         } as ShipmentEntity;
 

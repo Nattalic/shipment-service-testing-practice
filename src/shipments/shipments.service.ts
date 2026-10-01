@@ -8,6 +8,7 @@ import { ShipmentStatus } from './shipment-status.enum';
 
 @Injectable()
 export class ShipmentsService {
+  //cuando se usa el constructor nos dice que tenemos que mockear dependiencias para los casos 
   constructor(
     @InjectRepository(ShipmentEntity)
     private readonly shipmentsRepository: Repository<ShipmentEntity>,
